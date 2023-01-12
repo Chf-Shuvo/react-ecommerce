@@ -1,18 +1,44 @@
 import "./assets/backend/css/styles.css";
 import "./assets/backend/js/scripts";
 
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  BrowserRouter as Router,
+  Switch,
+} from "react-router-dom";
 
 import Login from "./views/backend/auth/Login";
 import Master from "./layouts/backend/Master.js";
 import React from "react";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.headers.post["Accept"] = "application/json";
+axios.defaults.withCredentials = true;
+axios.interceptors.request.use(function (configuration) {
+  const token = localStorage.getItem("auth_token");
+  configuration.headers.Authorization = token ? `Bearer ${token}` : "";
+  return configuration;
+});
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" component={Login}></Route>
-        <Route path="/admin/dashboard" component={Master}></Route>
+        <Route exact path="/">
+          {localStorage.getItem("auth_token") ? (
+            <Redirect to="/admin/dashboard" />
+          ) : (
+            <Login />
+          )}
+        </Route>
+        <Route
+          path="/admin"
+          name="Admin"
+          render={(props) => <Master {...props} />}
+        ></Route>
       </Switch>
     </Router>
   );

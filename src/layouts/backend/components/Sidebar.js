@@ -5,14 +5,13 @@ const Sidebar = () => {
     <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
       <div className="sb-sidenav-menu">
         <div className="nav">
-          <div className="sb-sidenav-menu-heading">Core</div>
-          <Link className="nav-link" to="index.html">
+          <Link className="nav-link" to="/admin/dashboard">
             <div className="sb-nav-link-icon">
               <i className="fas fa-tachometer-alt"></i>
             </div>
             Dashboard
           </Link>
-          <div className="sb-sidenav-menu-heading">Interface</div>
+          <div className="sb-sidenav-menu-heading">Super-Admin Access</div>
           <Link
             className="nav-link collapsed"
             to="#"
@@ -24,7 +23,7 @@ const Sidebar = () => {
             <div className="sb-nav-link-icon">
               <i className="fas fa-columns"></i>
             </div>
-            Layouts
+            Settings
             <div className="sb-sidenav-collapse-arrow">
               <i className="fas fa-angle-down"></i>
             </div>
@@ -36,12 +35,18 @@ const Sidebar = () => {
             data-bs-parent="#sidenavAccordion"
           >
             <nav className="sb-sidenav-menu-nested nav">
-              <Link className="nav-link" to="layout-static.html">
-                Static Navigation
+              <Link className="nav-link" to="/admin/settings">
+                <div className="sb-nav-link-icon">
+                  <i className="fas fa-minus"></i>
+                </div>
+                Site Settings
               </Link>
-              <Link className="nav-link" to="layout-sidenav-light.html">
-                Light Sidenav
-              </Link>
+              {/* <Link className="nav-link" to="/admin/user">
+                <div className="sb-nav-link-icon">
+                  <i className="fas fa-minus"></i>
+                </div>
+                Manage Users
+              </Link> */}
             </nav>
           </div>
           <Link
