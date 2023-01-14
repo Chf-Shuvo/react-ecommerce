@@ -1,15 +1,10 @@
 import "./assets/backend/css/styles.css";
 import "./assets/backend/js/scripts";
 
-import {
-  Redirect,
-  Route,
-  BrowserRouter as Router,
-  Switch,
-} from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 
+import Authenticate from "./middleware/Authenticate";
 import Login from "./views/backend/auth/Login";
-import Master from "./layouts/backend/Master.js";
 import React from "react";
 import axios from "axios";
 
@@ -27,18 +22,8 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/">
-          {localStorage.getItem("auth_token") ? (
-            <Redirect to="/admin/dashboard" />
-          ) : (
-            <Login />
-          )}
-        </Route>
-        <Route
-          path="/admin"
-          name="Admin"
-          render={(props) => <Master {...props} />}
-        ></Route>
+        <Authenticate path="/admin" name="Admin" />
+        <Route exact path="/" name="Login" component={Login}></Route>
       </Switch>
     </Router>
   );

@@ -21,27 +21,37 @@ function Login() {
       password: loginInput.password,
     };
 
-    axios.get("/sanctum/csrf-cookie").then((response) => {
-      axios.post("/login", data).then((response) => {
-        if (response.data.status === 200) {
-          localStorage.setItem("auth_token", response.data.token);
-          localStorage.setItem("username", response.data.user.name);
-          history.push("/admin/dashboard");
-        } else if (response.data.status === 401) {
-          Swal.fire({
-            title: "Invalid email/password!",
-            text: "Please check your email/password and try again.",
-            icon: "question",
-          });
-        } else {
-          Swal.fire({
-            title: "Invalid email/password!",
-            text: "Please check your email/password and try again.",
-            icon: "error",
-          });
-        }
+    axios
+      .get("/sanctum/csrf-cookie")
+      .then((response) => {
+        axios.post("/admin/login", data).then((response) => {
+          if (response.data.status === 200) {
+            localStorage.setItem("auth_token", response.data.token);
+            localStorage.setItem("username", response.data.user.name);
+            history.push("/admin/dashboard");
+          } else if (response.data.status === 401) {
+            Swal.fire({
+              title: "Invalid email/password!",
+              text: "Please check your email/password and try again.",
+              icon: "question",
+            });
+          } else {
+            Swal.fire({
+              title: "Error Code: " + response.data.status,
+              text: response.data.response,
+              icon: "error",
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Error",
+          text: error,
+          icon: "error",
+        });
       });
-    });
   };
   return (
     <div id="layoutAuthentication">
@@ -79,6 +89,7 @@ function Login() {
                           placeholder="Password"
                           onChange={handleInput}
                           value={loginInput.password}
+                          required
                         />
                         <label>Password</label>
                       </div>

@@ -41,12 +41,12 @@ const Sidebar = () => {
                 </div>
                 Site Settings
               </Link>
-              {/* <Link className="nav-link" to="/admin/user">
+              <Link className="nav-link" to="/admin/users">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-minus"></i>
                 </div>
                 Manage Users
-              </Link> */}
+              </Link>
             </nav>
           </div>
           <Link
