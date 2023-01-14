@@ -1,4 +1,5 @@
 import Dashboard from "../views/backend/Dashboard";
+import Edit from "../views/backend/users/Edit";
 import Profile from "../views/backend/settings/Profile";
 import Settings from "../views/backend/settings/Settings";
 import UserIndex from "../views/backend/users/Index";
@@ -24,6 +25,12 @@ const routes = [
   },
   // user management routes
   { path: "/admin/users", exact: true, name: "Users", component: UserIndex },
+  {
+    path: "/admin/users/edit/:id",
+    exact: true,
+    name: "EditUser",
+    component: Edit,
+  },
 ];
 
 export default routes;

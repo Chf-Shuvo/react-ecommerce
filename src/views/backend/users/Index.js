@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 
 function UserIndex() {
+  /** User Input Details */
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
     password: "",
   });
+  /** Users list from the database */
   const [users, setUsers] = useState([]);
   const handleFromInput = (event) => {
     event.persist();
@@ -17,6 +20,7 @@ function UserIndex() {
       [event.target.name]: event.target.value,
     });
   };
+  /** Clear the form after inserting a user */
   const clearForm = () => {
     setUserDetails({
       name: "",
@@ -24,6 +28,7 @@ function UserIndex() {
       password: "",
     });
   };
+  /** Submit the form and add a user */
   const submitForm = () => {
     const formData = {
       name: userDetails.name,
@@ -34,7 +39,6 @@ function UserIndex() {
       .post("/admin/user/store", formData)
       .then((response) => {
         clearForm();
-        console.log(response.data.user);
         setUsers([...users, response.data.user]);
         Swal.fire("Success", response.data.message, "success");
       })
@@ -42,12 +46,30 @@ function UserIndex() {
         Swal.fire("Error", error.message, "error");
       });
   };
+  /** Delete a user */
+  const deleteUser = (event, userID) => {
+    // if you miss the preventDefault the component will delete all the users cause this function gets executed when the component is mounted
+    event.preventDefault();
+    axios
+      .get("/admin/user/delete/" + userID)
+      .then((response) => {
+        Swal.fire("Deleted", response.data.message, "success");
+        setUsers(users.filter((user) => user.id !== userID));
+      })
+      .catch((error) => {
+        Swal.fire("Error!", error.message, "error");
+      });
+  };
   // if you want to console log the data then you have to useEffect that cause useEffect executes after the sate has been updated
   useEffect(() => {
     axios
       .get("admin/user/index")
       .then((response) => {
-        setUsers(response.data.users);
+        setUsers(
+          response.data.users.filter(
+            (user) => user.id !== response.data.current_user
+          )
+        );
       })
       .catch((error) => {
         Swal.fire("Error", error, "error");
@@ -82,7 +104,20 @@ function UserIndex() {
                     <tr key={user.id}>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
-                      <td>[edit],[delete]</td>
+                      <td>
+                        <Link
+                          to={"/admin/users/edit/" + user.id}
+                          className="btn btn-warning btn-sm me-md-2"
+                        >
+                          <i className="fas fa-edit    "></i>
+                        </Link>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={(event) => deleteUser(event, user.id)}
+                        >
+                          <i className="fas fa-trash    "></i>
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
